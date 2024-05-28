@@ -8,7 +8,7 @@ from flask import (
 )
 from markupsafe import escape
 import os
-from infererence import get_hooked_model, get_htmls
+from inference import get_hooked_model, get_htmls
 
 app = Flask(__name__)
 

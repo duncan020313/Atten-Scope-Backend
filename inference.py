@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import List
 from transformer_lens import HookedTransformer, ActivationCache
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -29,6 +30,7 @@ def get_htmls(prompt: str, hooked_model: HookedTransformer) -> List[str]:
 
     global previous_model
 
+    prompt = prompt.replace("\r\n", "\n")
     print("Prompt:", prompt)
     if previous_model != hooked_model:
         if previous_model is not None:
