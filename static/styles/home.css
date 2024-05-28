@@ -1,0 +1,130 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #2d2d2d;
+    color: #cccccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.styled-body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #2d2d2d;
+    color: #cccccc;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+}
+
+.container {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: #61dafb;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #61dafb;
+    color: #333;
+}
+
+
+.CodeMirror {
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: left !important;
+}
+
+input[type="submit"] {
+    background-color: #61dafb;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+input[type="submit"]:hover {
+    background-color: #21a1f1;
+}
+
+#loading {
+    margin-top: 20px;
+    font-size: 1.5em;
+    color: #61dafb;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.button-container a {
+    text-decoration: none;
+}
+
+.button-container button {
+    background-color: #333;
+    color: #61dafb;
+    padding: 10px 20px;
+    border: 1px solid #61dafb;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 5px 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.button-container button:hover {
+    background-color: #61dafb;
+    color: #333;
+}
+
+a {
+    color: #61dafb;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #21a1f1;
+}

@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Heatmap</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .viewer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        #buttons {
+            margin-bottom: 10px;
+        }
+        .button {
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .button {
+            border: 1px solid black;
+        }
+        .button.neon {
+            box-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f, 0 0 40px #00f;
+        }
+        .token {
+            display: inline-block;
+            cursor: pointer;
+            margin: 2px 0;
+            padding: 2px 5px;
+        }
+        .token:hover {
+            text-decoration: underline;
+        }
+        #tokens {
+            margin-left: 20px;
+            word-wrap: break-word;
+            font-size: 30px;
+        }
+        .canvas-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: min(75vw, 75vh);
+            height: min(75vw, 75vh);
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .token-viewer {
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+            align-items: center;
+            height: 75vh;
+            overflow-y: auto;
+        }
+        .mode-buttons {
+            margin-bottom: 10px;
+        }
+        .mode-button {
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: 1px solid black;
+            border-radius: 3px;
+        }
+        .mode-button.active {
+            background-color: #00f;
+            color: #fff;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .legend canvas {
+            border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body>
+<div id="buttons">
+    <div class="button" id="button0" onmouseover="showMatrix(0, true)" onclick="toggleFixMatrix(0)"><canvas id="previewCanvas0" width="50" height="50"></canvas><br>Head 0</div><div class="button" id="button1" onmouseover="showMatrix(1, true)" onclick="toggleFixMatrix(1)"><canvas id="previewCanvas1" width="50" height="50"></canvas><br>Head 1</div><div class="button" id="button2" onmouseover="showMatrix(2, true)" onclick="toggleFixMatrix(2)"><canvas id="previewCanvas2" width="50" height="50"></canvas><br>Head 2</div><div class="button" id="button3" onmouseover="showMatrix(3, true)" onclick="toggleFixMatrix(3)"><canvas id="previewCanvas3" width="50" height="50"></canvas><br>Head 3</div><div class="button" id="button4" onmouseover="showMatrix(4, true)" onclick="toggleFixMatrix(4)"><canvas id="previewCanvas4" width="50" height="50"></canvas><br>Head 4</div><div class="button" id="button5" onmouseover="showMatrix(5, true)" onclick="toggleFixMatrix(5)"><canvas id="previewCanvas5" width="50" height="50"></canvas><br>Head 5</div><div class="button" id="button6" onmouseover="showMatrix(6, true)" onclick="toggleFixMatrix(6)"><canvas id="previewCanvas6" width="50" height="50"></canvas><br>Head 6</div><div class="button" id="button7" onmouseover="showMatrix(7, true)" onclick="toggleFixMatrix(7)"><canvas id="previewCanvas7" width="50" height="50"></canvas><br>Head 7</div><div class="button" id="button8" onmouseover="showMatrix(8, true)" onclick="toggleFixMatrix(8)"><canvas id="previewCanvas8" width="50" height="50"></canvas><br>Head 8</div><div class="button" id="button9" onmouseover="showMatrix(9, true)" onclick="toggleFixMatrix(9)"><canvas id="previewCanvas9" width="50" height="50"></canvas><br>Head 9</div><div class="button" id="button10" onmouseover="showMatrix(10, true)" onclick="toggleFixMatrix(10)"><canvas id="previewCanvas10" width="50" height="50"></canvas><br>Head 10</div><div class="button" id="button11" onmouseover="showMatrix(11, true)" onclick="toggleFixMatrix(11)"><canvas id="previewCanvas11" width="50" height="50"></canvas><br>Head 11</div><div class="button" id="button12" onmouseover="showMatrix(12, true)" onclick="toggleFixMatrix(12)"><canvas id="previewCanvas12" width="50" height="50"></canvas><br>Head 12</div><div class="button" id="button13" onmouseover="showMatrix(13, true)" onclick="toggleFixMatrix(13)"><canvas id="previewCanvas13" width="50" height="50"></canvas><br>Head 13</div><div class="button" id="button14" onmouseover="showMatrix(14, true)" onclick="toggleFixMatrix(14)"><canvas id="previewCanvas14" width="50" height="50"></canvas><br>Head 14</div><div class="button" id="button15" onmouseover="showMatrix(15, true)" onclick="toggleFixMatrix(15)"><canvas id="previewCanvas15" width="50" height="50"></canvas><br>Head 15</div><div class="button" id="button16" onmouseover="showMatrix(16, true)" onclick="toggleFixMatrix(16)"><canvas id="previewCanvas16" width="50" height="50"></canvas><br>Head 16</div><div class="button" id="button17" onmouseover="showMatrix(17, true)" onclick="toggleFixMatrix(17)"><canvas id="previewCanvas17" width="50" height="50"></canvas><br>Head 17</div><div class="button" id="button18" onmouseover="showMatrix(18, true)" onclick="toggleFixMatrix(18)"><canvas id="previewCanvas18" width="50" height="50"></canvas><br>Head 18</div><div class="button" id="button19" onmouseover="showMatrix(19, true)" onclick="toggleFixMatrix(19)"><canvas id="previewCanvas19" width="50" height="50"></canvas><br>Head 19</div>
+</div>
+<div class="viewer">
+    <div class="canvas-wrapper">
+        <canvas id="heatmapCanvas"></canvas>
+        <div class="legend">
+            <canvas id="legendCanvas" width="200" height="20"></canvas>
+        </div>
+    </div>
+    <div class="token-viewer">
+        <div class="mode-buttons">
+            <div class="mode-button active" id="rowMode" onclick="setMode('row')">Row Mode</div>
+            <div class="mode-button" id="columnMode" onclick="setMode('column')">Column Mode</div>
+        </div>
+        <div id="tokens">
+            <span class="token" id="token0" onmouseover="highlightRowOrColumnAndToken(0)" onclick="toggleFixRowOrColumn(0)">&lt;|endoftext|&gt;</span><span class="token" id="token1" onmouseover="highlightRowOrColumnAndToken(1)" onclick="toggleFixRowOrColumn(1)">def</span><span class="token" id="token2" onmouseover="highlightRowOrColumnAndToken(2)" onclick="toggleFixRowOrColumn(2)">&nbsp;main</span><span class="token" id="token3" onmouseover="highlightRowOrColumnAndToken(3)" onclick="toggleFixRowOrColumn(3)">():</span><span class="token" id="token4" onmouseover="highlightRowOrColumnAndToken(4)" onclick="toggleFixRowOrColumn(4)">www</span>
+        </div>
+    </div>
+</div>
+<script>
+    const canvas = document.getElementById('heatmapCanvas');
+    const ctx = canvas.getContext('2d');
+    const matrices = [[[1.0, 0.0, 0.0, 0.0, 0.0], [0.998355507850647, 0.001644470845349133, 0.0, 0.0, 0.0], [0.9997187256813049, 0.00015375168004538864, 0.00012756821524817497, 0.0, 0.0], [0.9963140487670898, 0.0010903201764449477, 1.7736858353600837e-05, 0.0025779379066079855, 0.0], [0.990901529788971, 0.00033872705535031855, 3.952183396904729e-05, 0.00703219510614872, 0.0016880268231034279]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8624603748321533, 0.13753953576087952, 0.0, 0.0, 0.0], [0.08962173759937286, 0.8795760869979858, 0.03080214187502861, 0.0, 0.0], [0.3092573583126068, 0.47404322028160095, 0.02007903903722763, 0.196620374917984, 0.0], [0.4820156395435333, 0.10072723776102066, 0.015363871119916439, 0.21244652569293976, 0.18944673240184784]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.9906438589096069, 0.009356209076941013, 0.0, 0.0, 0.0], [0.9252537488937378, 0.0280778706073761, 0.04666842147707939, 0.0, 0.0], [0.8564699292182922, 0.012707643210887909, 0.11032027006149292, 0.020502211526036263, 0.0], [0.8957223892211914, 0.03479248657822609, 0.03759666532278061, 0.022938547655940056, 0.008949956856667995]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8674575090408325, 0.1325424760580063, 0.0, 0.0, 0.0], [0.3042548596858978, 0.678956151008606, 0.016788942739367485, 0.0, 0.0], [0.5067650079727173, 0.40529564023017883, 0.056144192814826965, 0.0317951925098896, 0.0], [0.09614963829517365, 0.031662460416555405, 0.04648168385028839, 0.555897057056427, 0.2698090970516205]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.4364756643772125, 0.5635242462158203, 0.0, 0.0, 0.0], [0.1659344583749771, 0.6938329935073853, 0.14023257791996002, 0.0, 0.0], [0.21021677553653717, 0.3170556426048279, 0.096092589199543, 0.37663504481315613, 0.0], [0.39309269189834595, 0.12740576267242432, 0.12022439390420914, 0.15770205855369568, 0.20157502591609955]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.6303560733795166, 0.369643896818161, 0.0, 0.0, 0.0], [0.36554983258247375, 0.21316562592983246, 0.4212845265865326, 0.0, 0.0], [0.32653918862342834, 0.017472604289650917, 0.5928939580917358, 0.06309425085783005, 0.0], [0.69651859998703, 0.0033620414324104786, 0.10173176974058151, 0.0549200214445591, 0.14346753060817719]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8495402932167053, 0.15045978128910065, 0.0, 0.0, 0.0], [0.691654622554779, 0.13950863480567932, 0.16883675754070282, 0.0, 0.0], [0.6513961553573608, 0.08924203366041183, 0.042276155203580856, 0.21708564460277557, 0.0], [0.7147825956344604, 0.14741744101047516, 0.026732956990599632, 0.03166573494672775, 0.07940126210451126]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.7573840618133545, 0.24261592328548431, 0.0, 0.0, 0.0], [0.4129360318183899, 0.07830696552991867, 0.5087569952011108, 0.0, 0.0], [0.2194850593805313, 0.046648092567920685, 0.10726475715637207, 0.6266021132469177, 0.0], [0.17998912930488586, 0.15122757852077484, 0.07630904018878937, 0.46610283851623535, 0.12637145817279816]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.9549699425697327, 0.04503006488084793, 0.0, 0.0, 0.0], [0.536121129989624, 0.1686064898967743, 0.2952724099159241, 0.0, 0.0], [0.19482998549938202, 0.27697616815567017, 0.17154964804649353, 0.35664424300193787, 0.0], [0.1749422550201416, 0.11524145305156708, 0.10803281515836716, 0.38719120621681213, 0.21459226310253143]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.9998162388801575, 0.00018376314255874604, 0.0, 0.0, 0.0], [0.9994480609893799, 0.00044917562627233565, 0.00010275482782162726, 0.0, 0.0], [0.9937661290168762, 0.0024292028974741697, 1.850970511441119e-05, 0.0037861585151404142, 0.0], [0.9920686483383179, 0.0006940964376553893, 0.0002369939029449597, 0.0035344362258911133, 0.0034658019430935383]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.23525170981884003, 0.7647482752799988, 0.0, 0.0, 0.0], [0.13442327082157135, 0.03936215117573738, 0.8262145519256592, 0.0, 0.0], [0.2948833107948303, 0.07481704652309418, 0.5612087249755859, 0.06909089535474777, 0.0], [0.40888988971710205, 0.02753239870071411, 0.24239100515842438, 0.024041512981057167, 0.2971453070640564]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8797762393951416, 0.12022379785776138, 0.0, 0.0, 0.0], [0.5073906183242798, 0.3829079270362854, 0.10970144718885422, 0.0, 0.0], [0.31791582703590393, 0.22456887364387512, 0.31163519620895386, 0.14588011801242828, 0.0], [0.5154796838760376, 0.1396174132823944, 0.13779212534427643, 0.16035939753055573, 0.046751368790864944]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8607805371284485, 0.1392194777727127, 0.0, 0.0, 0.0], [0.3750782310962677, 0.32795196771621704, 0.2969697415828705, 0.0, 0.0], [0.15358597040176392, 0.17001380026340485, 0.5704261064529419, 0.10597410053014755, 0.0], [0.28364408016204834, 0.1351008117198944, 0.3196433484554291, 0.2174104005098343, 0.04420134425163269]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.927561342716217, 0.07243860512971878, 0.0, 0.0, 0.0], [0.8821572661399841, 0.0361645445227623, 0.08167813718318939, 0.0, 0.0], [0.23920604586601257, 0.3980134427547455, 0.23038464784622192, 0.1323958784341812, 0.0], [0.3603527843952179, 0.06625893712043762, 0.39934757351875305, 0.1338942050933838, 0.04014647379517555]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.9877744913101196, 0.012225479818880558, 0.0, 0.0, 0.0], [0.0708051398396492, 0.9168203473091125, 0.012374470941722393, 0.0, 0.0], [0.2873383164405823, 0.17968271672725677, 0.47735142707824707, 0.05562755465507507, 0.0], [0.015474730171263218, 0.0013905243249610066, 0.005434106569737196, 0.971561074256897, 0.006139566656202078]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.9779474139213562, 0.02205260470509529, 0.0, 0.0, 0.0], [0.817699134349823, 0.1579248458147049, 0.02437600865960121, 0.0, 0.0], [0.7129741311073303, 0.1736777275800705, 0.04139923304319382, 0.07194895297288895, 0.0], [0.801652729511261, 0.0870932787656784, 0.08155161887407303, 0.026045924052596092, 0.003656338667497039]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.5529091954231262, 0.4470907747745514, 0.0, 0.0, 0.0], [0.21710118651390076, 0.4158512055873871, 0.36704763770103455, 0.0, 0.0], [0.04521995782852173, 0.15385419130325317, 0.36237823963165283, 0.43854767084121704, 0.0], [0.2687167525291443, 0.1663791388273239, 0.33251115679740906, 0.10740704089403152, 0.12498593330383301]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.6350076794624329, 0.3649923801422119, 0.0, 0.0, 0.0], [0.43211638927459717, 0.3155784606933594, 0.25230515003204346, 0.0, 0.0], [0.15487030148506165, 0.2411520779132843, 0.39639297127723694, 0.2075846791267395, 0.0], [0.355380654335022, 0.15366767346858978, 0.19752822816371918, 0.19803710281848907, 0.09538636356592178]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.8660950660705566, 0.13390490412712097, 0.0, 0.0, 0.0], [0.6098785996437073, 0.26131123304367065, 0.12881013751029968, 0.0, 0.0], [0.4728975296020508, 0.03661562502384186, 0.29567593336105347, 0.1948108673095703, 0.0], [0.005625973921269178, 0.0041739181615412235, 0.005465572699904442, 0.9813703298568726, 0.0033642062917351723]], [[1.0, 0.0, 0.0, 0.0, 0.0], [0.766738772392273, 0.23326119780540466, 0.0, 0.0, 0.0], [0.47121742367744446, 0.34084728360176086, 0.1879352480173111, 0.0, 0.0], [0.18951722979545593, 0.43208155035972595, 0.24526304006576538, 0.13313820958137512, 0.0], [0.20045575499534607, 0.31930652260780334, 0.28734833002090454, 0.1490073800086975, 0.04388200491666794]]];
+    const rows = 5;
+    const cols = 5;
+    const minVals = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+    const maxVals = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+    const hues = [207, 217, 149, 75, 123, 346, 224, 326, 207, 360, 16, 122, 278, 191, 172, 37, 144, 252, 349, 262];
+    let fixedMatrixIndex = null;
+    let currentMatrixIndex = 0;
+    let currentMode = 'row'; // Default mode
+    const legendCanvas = document.getElementById('legendCanvas');
+    const legendCtx = legendCanvas.getContext('2d');
+
+    function resizeCanvas() {
+        const canvasWrapper = document.querySelector('.canvas-wrapper');
+        canvas.width = canvasWrapper.clientWidth;
+        canvas.height = canvasWrapper.clientHeight;
+        drawMatrix(currentMatrixIndex);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function valueToColor(value, minVal, maxVal, hue, dim = false) {
+        const normalizedValue = (value - minVal) / (maxVal - minVal);
+        const lightness = 100 - Math.floor(normalizedValue * 75);  // lightness from 25% to 100%
+        if (dim) {
+            return `hsl(${hue}, 0%, ${lightness}%)`;  // Dim the brightness for non-highlighted rows
+        }
+        return `hsl(${hue}, 100%, ${lightness}%)`;
+    }
+
+    function drawMatrix(matrixIndex, highlightIndex = null) {
+        const data = matrices[matrixIndex];
+        const minVal = minVals[matrixIndex];
+        const maxVal = maxVals[matrixIndex];
+        const hue = hues[matrixIndex];
+        const currentRows = data.length;
+        const currentCols = data[0].length;
+        const cellWidth = Math.floor(canvas.width / currentCols);
+        const cellHeight = Math.floor(canvas.height / currentRows);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < currentRows; i++) {
+            for (let j = 0; j < currentCols; j++) {
+                let dim = false;
+                if (highlightIndex !== null) {
+                    if (currentMode === 'row' && i !== highlightIndex) {
+                        dim = true;
+                    } else if (currentMode === 'column' && j !== highlightIndex) {
+                        dim = true;
+                    }
+                }
+                ctx.fillStyle = valueToColor(data[i][j], minVal, maxVal, hue, dim);
+                ctx.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+            }
+        }
+    }
+
+    function showMatrix(matrixIndex, updateTokens = false) {
+        currentMatrixIndex = matrixIndex;
+        if (fixedMatrixIndex === null) {
+            drawMatrix(matrixIndex);
+        }
+        if (updateTokens) {
+            const rowOrColumn = matrices[matrixIndex][0];
+            const minVal = minVals[matrixIndex];
+            const maxVal = maxVals[matrixIndex];
+            const hue = hues[matrixIndex];
+            for (let i = 0; i < rowOrColumn.length; i++) {
+                const tokenElem = document.getElementById('token' + i);
+                tokenElem.style.backgroundColor = valueToColor(rowOrColumn[i], minVal, maxVal, hue);
+            }
+        }
+        updateLegend();
+    }
+    
+    function drawLegend(minVal, maxVal, hue) {
+        const gradient = legendCtx.createLinearGradient(0, 0, legendCanvas.width, 0);
+        for (let i = 0; i <= 100; i++) {
+            const value = minVal + (i / 100) * (maxVal - minVal);
+            const color = valueToColor(value, minVal, maxVal, hue);
+            gradient.addColorStop(i / 100, color);
+        }
+
+        legendCtx.fillStyle = gradient;
+        legendCtx.fillRect(0, 0, legendCanvas.width, legendCanvas.height);
+
+        // Add text labels for min and max values
+        legendCtx.fillStyle = 'black';
+        legendCtx.font = '14px Arial';
+        legendCtx.fontWeight = 'bold';
+        legendCtx.fillText(minVal.toFixed(2), 0, legendCanvas.height - 3);
+        legendCtx.fillText(maxVal.toFixed(2), legendCanvas.width - 30, legendCanvas.height - 3);
+    }
+
+    function updateLegend() {
+        const minVal = minVals[currentMatrixIndex];
+        const maxVal = maxVals[currentMatrixIndex];
+        const hue = hues[currentMatrixIndex];
+        drawLegend(minVal, maxVal, hue);
+    }
+
+    function toggleFixMatrix(matrixIndex) {
+        if (fixedMatrixIndex === matrixIndex) {
+            fixedMatrixIndex = null;
+            document.getElementById('button' + matrixIndex).classList.remove('neon');
+        } else {
+            fixedMatrixIndex = matrixIndex;
+            // Remove neon effect from all buttons
+            for (let i = 0; i < matrices.length; i++) {
+                document.getElementById('button' + i).classList.remove('neon');
+            }
+            // Add neon effect to the selected button
+            document.getElementById('button' + matrixIndex).classList.add('neon');
+        }
+        drawMatrix(matrixIndex);
+    }
+
+    function highlightRowOrColumnAndToken(index) {
+        if (currentMode === 'row') {
+            highlightRow(index);
+        } else {
+            highlightColumn(index);
+        }
+        highlightToken(index);
+    }
+
+    function highlightRow(rowIndex) {
+        const matrixIndex = fixedMatrixIndex !== null ? fixedMatrixIndex : currentMatrixIndex;
+        drawMatrix(matrixIndex, rowIndex);
+    }
+
+    function highlightColumn(colIndex) {
+        const matrixIndex = fixedMatrixIndex !== null ? fixedMatrixIndex : currentMatrixIndex;
+        drawMatrix(matrixIndex, colIndex);
+    }
+
+    function highlightToken(index) {
+        const matrixIndex = fixedMatrixIndex !== null ? fixedMatrixIndex : currentMatrixIndex;
+        const minVal = minVals[matrixIndex];
+        const maxVal = maxVals[matrixIndex];
+        const hue = hues[matrixIndex];
+        let values;
+        if (currentMode === 'row') {
+            values = matrices[matrixIndex][index];
+        } else {
+            values = matrices[matrixIndex].map(row => row[index]);
+        }
+        for (let i = 0; i < values.length; i++) {
+            const tokenElem = document.getElementById('token' + i);
+            tokenElem.style.backgroundColor = valueToColor(values[i], minVal, maxVal, hue);
+        }
+    }
+
+    function toggleFixRowOrColumn(index) {
+        if (fixedMatrixIndex !== null) {
+            if (currentMode === 'row') {
+                highlightRow(index);
+            } else {
+                highlightColumn(index);
+            }
+        }
+    }
+
+    function drawPreview(matrixIndex) {
+        const previewCanvas = document.getElementById('previewCanvas' + matrixIndex);
+        const previewCtx = previewCanvas.getContext('2d');
+        const data = matrices[matrixIndex];
+        const minVal = minVals[matrixIndex];
+        const maxVal = maxVals[matrixIndex];
+        const hue = hues[matrixIndex];
+        const previewRows = previewCanvas.height;
+        const previewCols = previewCanvas.width;
+        const cellHeight = Math.max(previewCanvas.height / data.length, 2);
+        const cellWidth = Math.max(previewCanvas.width / data[0].length, 2);
+        const maxIndex = Math.min(previewRows / cellWidth, data.length);
+        console.log(cellWidth, cellHeight, maxIndex)
+        for (let i = 0; i < maxIndex; i++) {
+            for (let j = 0; j < maxIndex; j++) {
+                previewCtx.fillStyle = valueToColor(data[i][j], minVal, maxVal, hue);
+                previewCtx.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+            }
+        }
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('rowMode').classList.toggle('active', mode === 'row');
+        document.getElementById('columnMode').classList.toggle('active', mode === 'column');
+        // Redraw the matrix to update the neon effect
+        drawMatrix(currentMatrixIndex);
+        updateLegend();
+    }
+
+    // Draw previews
+    for (let i = 0; i < matrices.length; i++) {
+        drawPreview(i);
+    }
+
+    // Initial display
+    showMatrix(currentMatrixIndex);
+</script>
+</body>
+</html>
+    

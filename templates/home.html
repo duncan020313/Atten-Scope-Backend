@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atten-Scope</title>
+    <link rel="stylesheet" href="home.css">
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        window.onload = function () {
+            var editor = CodeMirror.fromTextArea(document.getElementById('prompt'), {
+                mode: 'python',
+                theme: 'dracula',
+                lineNumbers: true,
+                matchBrackets: true,
+                styleActiveLine: true
+            });
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello Atten-Scope</h1>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="old_versions">Old Versions</a></li>
+            </ul>
+        </nav>
+        <form action="/generate_html" method="post" onsubmit="showLoading()">
+            <label for="model">Choose a model:</label><br>
+            <select id="model" name="model">
+                <option value="gpt2">GPT-2</option>
+                <option value="gpt2-large">GPT-2 Large</option>
+                <option value="codellama-7b-python">CodeLlama-7b-Python-hf</option>
+            </select><br><br>
+            <textarea id="prompt" name="prompt" rows="10" cols="80"
+                placeholder="Type your prompt here..."></textarea><br><br>
+            <input type="submit" value="Generate HTML">
+        </form>
+        <div id="loading" style="display:none;">
+            <p>Loading...</p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
