@@ -83,10 +83,17 @@ def serve_html(filename):
 @app.route("/old_versions", methods=["GET"])
 def old_versions():
     dir_list = os.listdir("old_versions")
+
+    # Sort with date
+    def find_date(file_name):
+        return datetime.strptime(file_name, f"%Y-%m-%d_%H-%M-%S")
+
+    sorted_dir_list = sorted(dir_list, key=find_date)
+
     atag_htmls = "".join(
         [
             f'<div class="button-container"><a href="{url_for("serve_old_version", filename=filename)}"><button>{filename}</button></a></div>'
-            for filename in dir_list
+            for filename in sorted_dir_list
         ]
     )
     return render_template_string(

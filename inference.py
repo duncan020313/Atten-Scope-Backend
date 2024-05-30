@@ -48,9 +48,14 @@ def get_htmls(prompt: str, hooked_model: HookedTransformer) -> List[str]:
     for layer in range(num_of_layer):
         attention = cache["pattern", layer].squeeze()
         value = cache["v", layer].squeeze().transpose(0, 1)
+        z = cache["z", layer].squeeze().transpose(0, 1)
+        post_processed_attention = [
+            AttentionPostprocessing.get_effective_attention(a, z)
+            for a, z in zip(attention, z)
+        ]
         post_processed_attention = [
             AttentionPostprocessing.apply_value_norm_to_attention(a, v).numpy()
-            for a, v in zip(attention, value)
+            for a, v in zip(post_processed_attention, value)
         ]
 
         labels = [f"Head {head}" for head in range(attention.size(0))]
